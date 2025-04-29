@@ -1,0 +1,954 @@
+{
+    "name": "Integration Webhooks",
+    "flow": [
+        {
+            "id": 2,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 714174,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "My gateway-webhook webhook"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 3,
+            "module": "util:FunctionSleep",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "duration": "6"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "duration",
+                        "type": "uinteger",
+                        "label": "Delay",
+                        "required": true,
+                        "validate": {
+                            "max": 300,
+                            "min": 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "http:ActionSendData",
+            "version": 3,
+            "parameters": {
+                "handleErrors": true,
+                "useNewZLibDeCompress": true
+            },
+            "mapper": {
+                "url": "http://api.weatherapi.com/v1/forecast.json?key=406c6a511cfd46939c5182429252804&q={{2.cidade}}&days=5&lang=pt",
+                "serializeUrl": false,
+                "method": "get",
+                "headers": [],
+                "qs": [],
+                "bodyType": "",
+                "parseResponse": false,
+                "authUser": "",
+                "authPass": "",
+                "timeout": "",
+                "shareCookies": false,
+                "ca": "",
+                "rejectUnauthorized": true,
+                "followRedirect": true,
+                "useQuerystring": false,
+                "gzip": true,
+                "useMtls": false,
+                "followAllRedirects": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "method": {
+                            "mode": "chose",
+                            "label": "GET"
+                        },
+                        "headers": {
+                            "mode": "chose"
+                        },
+                        "qs": {
+                            "mode": "chose"
+                        },
+                        "bodyType": {
+                            "label": "Empty"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "handleErrors",
+                        "type": "boolean",
+                        "label": "Evaluate all states as errors (except for 2xx and 3xx )",
+                        "required": true
+                    },
+                    {
+                        "name": "useNewZLibDeCompress",
+                        "type": "hidden"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "serializeUrl",
+                        "type": "boolean",
+                        "label": "Serialize URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "get",
+                                "head",
+                                "post",
+                                "put",
+                                "patch",
+                                "delete",
+                                "options"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "label": "Name",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Value",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "qs",
+                        "type": "array",
+                        "label": "Query String",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "label": "Name",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Value",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "bodyType",
+                        "type": "select",
+                        "label": "Body type",
+                        "validate": {
+                            "enum": [
+                                "raw",
+                                "x_www_form_urlencoded",
+                                "multipart_form_data"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parseResponse",
+                        "type": "boolean",
+                        "label": "Parse response",
+                        "required": true
+                    },
+                    {
+                        "name": "authUser",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "authPass",
+                        "type": "password",
+                        "label": "Password"
+                    },
+                    {
+                        "name": "timeout",
+                        "type": "uinteger",
+                        "label": "Timeout",
+                        "validate": {
+                            "max": 300,
+                            "min": 1
+                        }
+                    },
+                    {
+                        "name": "shareCookies",
+                        "type": "boolean",
+                        "label": "Share cookies with other HTTP modules",
+                        "required": true
+                    },
+                    {
+                        "name": "ca",
+                        "type": "cert",
+                        "label": "Self-signed certificate"
+                    },
+                    {
+                        "name": "rejectUnauthorized",
+                        "type": "boolean",
+                        "label": "Reject connections that are using unverified (self-signed) certificates",
+                        "required": true
+                    },
+                    {
+                        "name": "followRedirect",
+                        "type": "boolean",
+                        "label": "Follow redirect",
+                        "required": true
+                    },
+                    {
+                        "name": "useQuerystring",
+                        "type": "boolean",
+                        "label": "Disable serialization of multiple same query string keys as arrays",
+                        "required": true
+                    },
+                    {
+                        "name": "gzip",
+                        "type": "boolean",
+                        "label": "Request compressed content",
+                        "required": true
+                    },
+                    {
+                        "name": "useMtls",
+                        "type": "boolean",
+                        "label": "Use Mutual TLS",
+                        "required": true
+                    },
+                    {
+                        "name": "followAllRedirects",
+                        "type": "boolean",
+                        "label": "Follow all redirect",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{4.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "Choose a data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 1201,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 10,
+                            "module": "builtin:BasicFeeder",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Sua Cidade",
+                                "conditions": []
+                            },
+                            "mapper": {
+                                "array": "{{5.forecast.forecastday}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1192,
+                                    "y": -372
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "array": {
+                                            "mode": "edit"
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "array",
+                                        "type": "array",
+                                        "label": "Array",
+                                        "mode": "edit",
+                                        "spec": []
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "module": "coda:updateRow",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 3032744
+                            },
+                            "mapper": {
+                                "mode": "select",
+                                "docId": "tVaE1BB4rr",
+                                "tableIdOrName": "grid-5aofj2h2zd",
+                                "rowIdOrName": "i-iYZZXex0Uw",
+                                "columns": {
+                                    "c-z6jbsp46N4": "{{5.location.name}}",
+                                    "c-GABzqrrzFG": "{{10.date}}",
+                                    "c-g9Rzoq2tCP": "{{10.day.mintemp_c}}",
+                                    "c-gzUwY7kjam": "{{10.day.maxtemp_c}}",
+                                    "c-_R_lPuh9LP": "{{10.day.condition.text}}",
+                                    "c-8Ei0YWd3tt": "{{10.day.avgtemp_c}}"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1573,
+                                    "y": -370
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "My Coda connection (zeldacoco01@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "coda"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "mode": {
+                                            "label": "Select"
+                                        },
+                                        "docId": {
+                                            "mode": "chose",
+                                            "label": "Teste de Proficiência - Modelo 1"
+                                        },
+                                        "tableIdOrName": {
+                                            "mode": "chose",
+                                            "label": "Estatisticas"
+                                        },
+                                        "rowIdOrName": {
+                                            "mode": "chose",
+                                            "label": "[1] "
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:coda",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "mode",
+                                        "type": "select",
+                                        "label": "Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "select",
+                                                "map"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "docId",
+                                        "type": "select",
+                                        "label": "Doc",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "tableIdOrName",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "rowIdOrName",
+                                        "type": "select",
+                                        "label": "Row ID or Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "columns",
+                                        "type": "collection",
+                                        "label": "Columns",
+                                        "spec": [
+                                            {
+                                                "name": "c-z6jbsp46N4",
+                                                "type": "text",
+                                                "label": "Cidade"
+                                            },
+                                            {
+                                                "name": "c-GABzqrrzFG",
+                                                "type": "text",
+                                                "label": "Dia"
+                                            },
+                                            {
+                                                "name": "c-g9Rzoq2tCP",
+                                                "type": "text",
+                                                "label": "Temperatura Minima"
+                                            },
+                                            {
+                                                "name": "c-gzUwY7kjam",
+                                                "type": "text",
+                                                "label": "Temperatura Maxima"
+                                            },
+                                            {
+                                                "name": "c-_R_lPuh9LP",
+                                                "type": "text",
+                                                "label": "Condição"
+                                            },
+                                            {
+                                                "name": "c-8Ei0YWd3tt",
+                                                "type": "text",
+                                                "label": "Temperatura Média"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 7,
+                            "module": "google-docs:createADocumentFromTemplate",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 3032649
+                            },
+                            "filter": {
+                                "name": "Cidade",
+                                "conditions": []
+                            },
+                            "mapper": {
+                                "select": "dropdown",
+                                "name": "Tempo na região de{{5.location.name}}-{{5.location.localtime}}",
+                                "destination": "drive",
+                                "from": "drive",
+                                "document": "/1Fg6HEc5D5yIGx_L5Hr4yrGEkiShnakdSIHIp3tj1bMo",
+                                "requests": {
+                                    "cidade": "{{5.location.name}}",
+                                    "estado": "{{5.location.region}}",
+                                    "pais": "{{5.location.country}}",
+                                    "temperatura": "{{5.current.temp_c}}",
+                                    "condicao": "{{5.current.condition.text}}",
+                                    "atualizacao": "{{5.current.last_updated}}"
+                                },
+                                "folderId": "/1E6yWSFoYxhswnLlK13JdhnGXayW5hAWj"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1213,
+                                    "y": 365
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "My Google connection (zeldacoco01@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "select": {
+                                            "label": "By Dropdown"
+                                        },
+                                        "destination": {
+                                            "label": "My Drive"
+                                        },
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "document": {
+                                            "path": [
+                                                "Template"
+                                            ]
+                                        },
+                                        "folderId": {
+                                            "mode": "chose",
+                                            "path": [
+                                                "Designs"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "select",
+                                        "type": "select",
+                                        "label": "Create a Document from a Template",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "map",
+                                                "dropdown"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "destination",
+                                        "type": "select",
+                                        "label": "New Drive Location",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Choose a Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "document",
+                                        "type": "file",
+                                        "label": "Document ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "requests",
+                                        "type": "collection",
+                                        "label": "Values",
+                                        "spec": [
+                                            {
+                                                "name": "cidade",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "estado",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "pais",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "temperatura",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "condicao",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "atualizacao",
+                                                "type": "any"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "folderId",
+                                        "type": "folder",
+                                        "label": "New Document's Location",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "module": "coda:updateRow",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 3032744
+                            },
+                            "mapper": {
+                                "mode": "select",
+                                "docId": "tVaE1BB4rr",
+                                "tableIdOrName": "grid-fz168ZyYl3",
+                                "rowIdOrName": "i-8XLYITTzZm",
+                                "columns": {
+                                    "c-Tr0fX0x55L": "{{5.current.temp_c}}"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1564,
+                                    "y": 342
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "My Coda connection (zeldacoco01@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "coda"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "mode": {
+                                            "label": "Select"
+                                        },
+                                        "docId": {
+                                            "mode": "chose",
+                                            "label": "Teste de Proficiência - Modelo 1"
+                                        },
+                                        "tableIdOrName": {
+                                            "mode": "chose",
+                                            "label": "Clima da Cidade"
+                                        },
+                                        "rowIdOrName": {
+                                            "mode": "edit"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:coda",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "mode",
+                                        "type": "select",
+                                        "label": "Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "select",
+                                                "map"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "docId",
+                                        "type": "select",
+                                        "label": "Doc",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "tableIdOrName",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "rowIdOrName",
+                                        "type": "select",
+                                        "label": "Row ID or Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "columns",
+                                        "type": "collection",
+                                        "label": "Columns",
+                                        "spec": [
+                                            {
+                                                "name": "c-8_pa2ZaDs8",
+                                                "type": "text",
+                                                "label": "Cidade"
+                                            },
+                                            {
+                                                "name": "c-_KCxCGSJnt",
+                                                "type": "text",
+                                                "label": "Gerar"
+                                            },
+                                            {
+                                                "name": "c-Tr0fX0x55L",
+                                                "type": "text",
+                                                "label": "Temperatura"
+                                            },
+                                            {
+                                                "name": "c-_LzaTUZEIt",
+                                                "type": "text",
+                                                "label": "Doc"
+                                            },
+                                            {
+                                                "name": "c-RUZhQR415c",
+                                                "type": "text",
+                                                "label": "Ver docs"
+                                            },
+                                            {
+                                                "name": "c-kuvrlmuTN6",
+                                                "type": "text",
+                                                "label": "Text"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "module": "coda:updateRow",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 3032744
+                            },
+                            "mapper": {
+                                "mode": "select",
+                                "docId": "tVaE1BB4rr",
+                                "tableIdOrName": "grid-ZEs0JzAXfN",
+                                "rowIdOrName": "i-1sPvUMupMl",
+                                "columns": {
+                                    "c-D1P03Zuj0t": "{{5.location.name}}",
+                                    "c-gzsGiS-Exa": "{{5.current.temp_c}}",
+                                    "c-ppOmXZgtjn": "{{7.webViewLink}}"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1920,
+                                    "y": 340
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "My Coda connection (zeldacoco01@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "coda"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "mode": {
+                                            "label": "Select"
+                                        },
+                                        "docId": {
+                                            "mode": "chose",
+                                            "label": "Teste de Proficiência - Modelo 1"
+                                        },
+                                        "tableIdOrName": {
+                                            "mode": "chose",
+                                            "label": "Documentos"
+                                        },
+                                        "rowIdOrName": {
+                                            "mode": "chose",
+                                            "label": "[0] "
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:coda",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "mode",
+                                        "type": "select",
+                                        "label": "Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "select",
+                                                "map"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "docId",
+                                        "type": "select",
+                                        "label": "Doc",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "tableIdOrName",
+                                        "type": "select",
+                                        "label": "Table",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "rowIdOrName",
+                                        "type": "select",
+                                        "label": "Row ID or Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "columns",
+                                        "type": "collection",
+                                        "label": "Columns",
+                                        "spec": [
+                                            {
+                                                "name": "c-uEImkyYKdx",
+                                                "type": "text",
+                                                "label": "Data"
+                                            },
+                                            {
+                                                "name": "c-D1P03Zuj0t",
+                                                "type": "text",
+                                                "label": "Cidade"
+                                            },
+                                            {
+                                                "name": "c-gzsGiS-Exa",
+                                                "type": "text",
+                                                "label": "Temperatura"
+                                            },
+                                            {
+                                                "name": "c-ppOmXZgtjn",
+                                                "type": "text",
+                                                "label": "Link"
+                                            },
+                                            {
+                                                "name": "c-_12UsCKe4Z",
+                                                "type": "text",
+                                                "label": "Tempo"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
